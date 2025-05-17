@@ -14,30 +14,16 @@ export function Footer() {
               <h2 className="text-xl font-display font-bold text-white">ModaVista</h2>
             </div>
             <p className="mb-4">ModaVista, moda ve teknolojinin buluştuğu yenilikçi e-ticaret platformu.</p>
-            <div className="flex space-x-4 mb-6">
-              <a href="#" className="text-neutral-400 hover:text-white transition">
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition">
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a href="#" className="text-neutral-400 hover:text-white transition">
-                <i className="fab fa-youtube"></i>
-              </a>
-            </div>
+            {/* Social media icons removed */}
           </div>
                 
           <div>
             <h3 className="text-white font-semibold mb-4">Hesabım</h3>
             <ul className="space-y-3">
-              <li><Link href="/profile"><a className="hover:text-white transition">Hesabım</a></Link></li>
-              <li><Link href="/orders"><a className="hover:text-white transition">Siparişlerim</a></Link></li>
-              <li><Link href="/favorites"><a className="hover:text-white transition">Favorilerim</a></Link></li>
-              <li><a href="#" className="hover:text-white transition">İade İşlemleri</a></li>
-              <li><a href="#" className="hover:text-white transition">Destek Merkezi</a></li>
+              <li><Link href="/profile" className="hover:text-white transition">Hesabım</Link></li>
+              <li><Link href="/orders" className="hover:text-white transition">Siparişlerim</Link></li>
+              <li><Link href="/favorites" className="hover:text-white transition">Favorilerim</Link></li>
+              {/* Non-clickable items removed */}
             </ul>
           </div>
                 
