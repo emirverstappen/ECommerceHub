@@ -190,21 +190,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/products/:id", async (req, res) => {
-    try {
-      const productId = parseInt(req.params.id);
-      const product = await storage.getProduct(productId);
-      
-      if (!product) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-      
-      res.json(product);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message || "Server error" });
-    }
-  });
-
   app.get("/api/products/featured", async (req, res) => {
     try {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 4;
@@ -220,6 +205,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 4;
       const newArrivals = await storage.getNewArrivals(limit);
       res.json(newArrivals);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message || "Server error" });
+    }
+  });
+
+  app.get("/api/products/:id", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.id);
+      const product = await storage.getProduct(productId);
+      
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      
+      res.json(product);
     } catch (error: any) {
       res.status(500).json({ message: error.message || "Server error" });
     }
