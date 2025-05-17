@@ -57,7 +57,8 @@ export default function ProductDetails() {
     toast({
       title: "Başarılı!",
       description: "Ürün sepete eklendi.",
-      variant: "success",
+      // Using default variant instead of success
+      variant: "default",
     });
   };
   
@@ -139,7 +140,7 @@ export default function ProductDetails() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink isCurrentPage>
+              <BreadcrumbLink aria-current="page">
                 {isLoading ? "Yükleniyor..." : (product ? product.name : "")}
               </BreadcrumbLink>
             </BreadcrumbItem>
