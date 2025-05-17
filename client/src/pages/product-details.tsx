@@ -44,7 +44,7 @@ export default function ProductDetails() {
 
   const handleQuantityChange = (amount: number) => {
     const newQuantity = quantity + amount;
-    if (newQuantity >= 1 && newQuantity <= (product?.stock || 10)) {
+    if (newQuantity >= 1 && newQuantity <= (product?.stock ?? 0)) {
       setQuantity(newQuantity);
     }
   };
@@ -182,8 +182,9 @@ export default function ProductDetails() {
                 <div className="flex items-center mb-4">
                   <div className="flex text-amber-400 text-sm">
                     {[...Array(5)].map((_, i) => {
-                      const filled = Math.floor(product.rating);
-                      const half = Math.round(product.rating) > filled;
+                      const rating = product.rating ?? 0;
+                      const filled = Math.floor(rating);
+                      const half = Math.round(rating) > filled;
                       
                       if (i < filled) {
                         return <i key={i} className="fas fa-star"></i>;
@@ -194,7 +195,7 @@ export default function ProductDetails() {
                       }
                     })}
                   </div>
-                  <span className="text-sm text-neutral-500 ml-1">({product.reviewCount} değerlendirme)</span>
+                  <span className="text-sm text-neutral-500 ml-1">({product.reviewCount ?? 0} değerlendirme)</span>
                 </div>
                 
                 <div className="mb-6">
@@ -216,14 +217,14 @@ export default function ProductDetails() {
                 
                 <div className="mb-8">
                   <div className="flex items-center">
-                    <span className={`w-3 h-3 rounded-full mr-2 ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                    <span className={`w-3 h-3 rounded-full mr-2 ${(product.stock ?? 0) > 0 ? 'bg-green-500' : 'bg-red-500'}`}></span>
                     <span className="text-sm font-medium">
-                      {product.stock > 0 ? `Stokta (${product.stock} adet)` : 'Stokta Yok'}
+                      {(product.stock ?? 0) > 0 ? `Stokta (${product.stock ?? 0} adet)` : 'Stokta Yok'}
                     </span>
                   </div>
                 </div>
                 
-                {product.stock > 0 && (
+                {(product.stock ?? 0) > 0 && (
                   <>
                     <div className="flex items-center mb-6">
                       <span className="text-neutral-700 mr-4">Adet:</span>
@@ -245,7 +246,7 @@ export default function ProductDetails() {
                           size="icon" 
                           className="h-9 w-9 rounded-r-md rounded-l-none"
                           onClick={() => handleQuantityChange(1)}
-                          disabled={quantity >= product.stock}
+                          disabled={quantity >= (product.stock ?? 0)}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
