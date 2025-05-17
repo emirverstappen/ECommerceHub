@@ -75,13 +75,13 @@ export function Header() {
                         Merhaba, {user?.firstName || user?.username}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>
+                      <DropdownMenuItem asChild>
                         <Link href="/profile">Profilim</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem asChild>
                         <Link href="/orders">Siparişlerim</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem asChild>
                         <Link href="/favorites">Favorilerim</Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
