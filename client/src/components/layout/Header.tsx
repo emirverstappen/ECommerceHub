@@ -108,13 +108,11 @@ export function Header() {
               </button>
 
               {/* Cart */}
-              <Link href="/cart">
-                <button className="text-neutral-600 hover:text-primary-500 relative">
-                  <ShoppingBag size={20} />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-primary-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{totalItems}</span>
-                  )}
-                </button>
+              <Link href="/cart" className="text-neutral-600 hover:text-primary-500 relative">
+                <ShoppingBag size={20} />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{totalItems}</span>
+                )}
               </Link>
             </div>
           </div>
@@ -130,37 +128,34 @@ export function Header() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/products/1">Erkek</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/products/2">Kadın</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/products/3">Elektronik</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/products/4">Ev & Yaşam</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
-              <Link href="/products/1">
-                <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Erkek</a>
+              <Link href="/products/1" className="text-neutral-700 hover:text-primary-500 font-medium text-sm">
+                Erkek
               </Link>
-              <Link href="/products/2">
-                <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Kadın</a>
+              <Link href="/products/2" className="text-neutral-700 hover:text-primary-500 font-medium text-sm">
+                Kadın
               </Link>
-              <Link href="/products/3">
-                <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Elektronik</a>
+              <Link href="/products/3" className="text-neutral-700 hover:text-primary-500 font-medium text-sm">
+                Elektronik
               </Link>
-              <Link href="/products/4">
-                <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Ev & Yaşam</a>
+              <Link href="/products/4" className="text-neutral-700 hover:text-primary-500 font-medium text-sm">
+                Ev & Yaşam
               </Link>
-              <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Kozmetik</a>
-              <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Spor & Outdoor</a>
-              <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Kitap & Hobi</a>
-              <a className="text-neutral-700 hover:text-primary-500 font-medium text-sm">Süpermarket</a>
+              {/* Removed non-clickable links */}
             </div>
           </nav>
         </div>
