@@ -12,9 +12,16 @@ interface AuthContextType {
   register: (userData: any) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isLoading: false,
+  isAuthenticated: false,
+  login: async () => {},
+  logout: async () => {},
+  register: async () => {}
+});
 
-export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -48,14 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       setUser(userData);
       
       toast({
-        title: "Başarılı!",
-        description: "Giriş başarıyla yapıldı.",
+        title: "Success!",
+        description: "Login successful.",
         variant: "default",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Giriş yapılamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Login failed, try again.",
         variant: "destructive",
       });
       throw error;
@@ -71,13 +78,13 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       setUser(null);
       
       toast({
-        title: "Çıkış Yapıldı",
-        description: "Başarıyla çıkış yaptınız.",
+        title: "Logged Out",
+        description: "You have been logged out successfully.",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Çıkış yapılamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Failed to log out, try again.",
         variant: "destructive",
       });
       throw error;
@@ -94,14 +101,14 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
       setUser(newUser);
       
       toast({
-        title: "Başarılı!",
-        description: "Hesabınız oluşturuldu ve giriş yapıldı.",
+        title: "Success!",
+        description: "Your account has been created and you are logged in.",
         variant: "default",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Kayıt oluşturulamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Failed to register, try again.",
         variant: "destructive",
       });
       throw error;
@@ -111,25 +118,12 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        logout,
-        register
-      }}
-    >
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  return useContext(AuthContext);
 }

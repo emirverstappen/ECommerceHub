@@ -48,14 +48,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(userData);
       
       toast({
-        title: "Başarılı!",
-        description: "Giriş başarıyla yapıldı.",
+        title: "Success!",
+        description: "Login successful.",
         variant: "default",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Giriş yapılamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Login failed, try again.",
         variant: "destructive",
       });
       throw error;
@@ -71,13 +71,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       
       toast({
-        title: "Çıkış Yapıldı",
-        description: "Başarıyla çıkış yaptınız.",
+        title: "Logged Out",
+        description: "You have been logged out successfully.",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Çıkış yapılamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Failed to log out, try again.",
         variant: "destructive",
       });
       throw error;
@@ -94,14 +94,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(newUser);
       
       toast({
-        title: "Başarılı!",
-        description: "Hesabınız oluşturuldu ve giriş yapıldı.",
+        title: "Success!",
+        description: "Your account has been created and you are logged in.",
         variant: "default",
       });
     } catch (error: any) {
       toast({
-        title: "Hata!",
-        description: error.message || "Kayıt oluşturulamadı, tekrar deneyin.",
+        title: "Error!",
+        description: error.message || "Failed to register, try again.",
         variant: "destructive",
       });
       throw error;
@@ -110,20 +110,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        logout,
-        register
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  // Create context value
+  const contextValue: AuthContextType = {
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    login,
+    logout,
+    register
+  };
+
+  // Return the provider
+  return AuthContext.Provider({ value: contextValue, children });
 }
 
 export function useAuth() {

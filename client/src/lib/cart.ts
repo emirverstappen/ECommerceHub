@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { CartItemWithProduct, Product } from "@shared/schema";
+import { CartItemWithProduct } from "@shared/schema";
 import { apiRequest } from "./queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "./auth";
@@ -15,7 +15,16 @@ interface CartContextType {
   clearCart: () => Promise<void>;
 }
 
-const CartContext = createContext<CartContextType | null>(null);
+const CartContext = createContext<CartContextType>({
+  cartItems: [],
+  isLoading: false,
+  totalItems: 0,
+  totalPrice: 0,
+  addToCart: async () => {},
+  updateQuantity: async () => {},
+  removeItem: async () => {},
+  clearCart: async () => {}
+});
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
@@ -52,8 +61,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Failed to fetch cart:", error);
       toast({
-        title: "Hata",
-        description: "Sepet bilgileri yüklenirken bir hata oluştu.",
+        title: "Error",
+        description: "Failed to load cart information.",
         variant: "destructive",
       });
     } finally {
@@ -64,8 +73,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const addToCart = async (productId: number, quantity: number) => {
     if (!isAuthenticated) {
       toast({
-        title: "Giriş Yapın",
-        description: "Sepete ürün eklemek için lütfen giriş yapın.",
+        title: "Login Required",
+        description: "Please log in to add items to your cart.",
         variant: "destructive",
       });
       return;
@@ -81,8 +90,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       await fetchCart(); // Refresh the cart
     } catch (error: any) {
       toast({
-        title: "Hata",
-        description: error.message || "Ürün sepete eklenemedi.",
+        title: "Error",
+        description: error.message || "Couldn't add product to cart.",
         variant: "destructive",
       });
     } finally {
@@ -97,8 +106,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       await fetchCart(); // Refresh the cart
     } catch (error: any) {
       toast({
-        title: "Hata",
-        description: error.message || "Sepet güncellenemedi.",
+        title: "Error",
+        description: error.message || "Couldn't update cart.",
         variant: "destructive",
       });
     } finally {
@@ -113,8 +122,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       await fetchCart(); // Refresh the cart
     } catch (error: any) {
       toast({
-        title: "Hata",
-        description: error.message || "Ürün sepetten çıkarılamadı.",
+        title: "Error",
+        description: error.message || "Couldn't remove item from cart.",
         variant: "destructive",
       });
     } finally {
@@ -129,8 +138,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setCartItems([]);
     } catch (error: any) {
       toast({
-        title: "Hata",
-        description: error.message || "Sepet temizlenemedi.",
+        title: "Error",
+        description: error.message || "Couldn't clear cart.",
         variant: "destructive",
       });
     } finally {
@@ -139,27 +148,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CartContext.Provider 
-      value={{
-        cartItems,
-        isLoading,
-        totalItems,
-        totalPrice,
-        addToCart,
-        updateQuantity,
-        removeItem,
-        clearCart
-      }}
-    >
+    <CartContext.Provider value={{ cartItems, isLoading, totalItems, totalPrice, addToCart, updateQuantity, removeItem, clearCart }}>
       {children}
     </CartContext.Provider>
   );
 }
 
 export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
-  return context;
+  return useContext(CartContext);
 }
