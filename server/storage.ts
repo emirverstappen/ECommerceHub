@@ -130,15 +130,18 @@ export class MemStorage implements IStorage {
   }
   
   async getFeaturedProducts(limit: number = 4): Promise<Product[]> {
-    // Get products with highest rating
-    const allProducts = Array.from(this.products.values());
-    const sortedProducts = [...allProducts].sort((a, b) => b.rating - a.rating);
-    return sortedProducts.slice(0, limit);
+    // Get products that are on sale
+    const saleProducts = Array.from(this.products.values())
+      .filter(product => product.isOnSale === true)
+      .sort((a, b) => (b.rating || 0) - (a.rating || 0)); // Sort by highest rating
+    return saleProducts.slice(0, limit);
   }
   
   async getNewArrivals(limit: number = 4): Promise<Product[]> {
     // Get products marked as new
-    const newProducts = Array.from(this.products.values()).filter(product => product.isNew);
+    const newProducts = Array.from(this.products.values())
+      .filter(product => product.isNew === true)
+      .sort((a, b) => b.id - a.id); // Most recently added (highest ID) first
     return newProducts.slice(0, limit);
   }
   
@@ -274,6 +277,7 @@ export class MemStorage implements IStorage {
 
     // Create demo products
     const productData: InsertProduct[] = [
+      // Erkek Category (ID: 1)
       {
         name: "Premium Spor Ayakkabı",
         slug: "premium-spor-ayakkabi",
@@ -288,18 +292,46 @@ export class MemStorage implements IStorage {
         isLimited: false
       },
       {
-        name: "Kablosuz Kulaklık",
-        slug: "kablosuz-kulaklik",
-        description: "Aktif gürültü engelleme",
-        price: 1249,
-        oldPrice: 1799,
-        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
-        categoryId: 3,
-        stock: 30,
+        name: "Erkek Klasik Kol Saati",
+        slug: "erkek-klasik-kol-saati",
+        description: "Su geçirmez, safir cam",
+        price: 1850,
+        oldPrice: null,
+        imageUrl: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 1,
+        stock: 18,
+        isNew: true,
+        isOnSale: false,
+        isLimited: false
+      },
+      {
+        name: "Erkek Slim Fit Gömlek",
+        slug: "erkek-slim-fit-gomlek",
+        description: "Yüksek kalite pamuk karışımlı kumaş",
+        price: 350,
+        oldPrice: 499,
+        imageUrl: "https://images.unsplash.com/photo-1608234808654-2a8875faa7fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 1,
+        stock: 40,
         isNew: false,
         isOnSale: true,
         isLimited: false
       },
+      {
+        name: "Erkek Deri Cüzdan",
+        slug: "erkek-deri-cuzdan",
+        description: "Gerçek deri, çeşitli kart bölmeleri",
+        price: 450,
+        oldPrice: 550,
+        imageUrl: "https://images.unsplash.com/photo-1606503825008-909a67e63c3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 1,
+        stock: 25,
+        isNew: false,
+        isOnSale: true,
+        isLimited: false
+      },
+      
+      // Kadın Category (ID: 2)
       {
         name: "Kadın Deri Kol Saati",
         slug: "kadin-deri-kol-saati",
@@ -311,6 +343,60 @@ export class MemStorage implements IStorage {
         stock: 15,
         isNew: false,
         isOnSale: false,
+        isLimited: false
+      },
+      {
+        name: "Tasarım El Çantası",
+        slug: "tasarim-el-cantasi",
+        description: "Gerçek deri, premium kalite",
+        price: 1450,
+        oldPrice: null,
+        imageUrl: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 2,
+        stock: 20,
+        isNew: true,
+        isOnSale: false,
+        isLimited: false
+      },
+      {
+        name: "Kadın Rahat Sneaker",
+        slug: "kadin-rahat-sneaker",
+        description: "Ultra hafif, yürüyüş için ideal",
+        price: 599,
+        oldPrice: 799,
+        imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 2,
+        stock: 30,
+        isNew: false,
+        isOnSale: true,
+        isLimited: false
+      },
+      {
+        name: "Kadın Güneş Gözlüğü",
+        slug: "kadin-gunes-gozlugu",
+        description: "UV korumalı, şık tasarım",
+        price: 350,
+        oldPrice: 450,
+        imageUrl: "https://images.unsplash.com/photo-1577803645773-f96470509666?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 2,
+        stock: 15,
+        isNew: true,
+        isOnSale: true,
+        isLimited: false
+      },
+      
+      // Elektronik Category (ID: 3)
+      {
+        name: "Kablosuz Kulaklık",
+        slug: "kablosuz-kulaklik",
+        description: "Aktif gürültü engelleme",
+        price: 1249,
+        oldPrice: 1799,
+        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 3,
+        stock: 30,
+        isNew: false,
+        isOnSale: true,
         isLimited: false
       },
       {
@@ -327,19 +413,6 @@ export class MemStorage implements IStorage {
         isLimited: true
       },
       {
-        name: "Tasarım El Çantası",
-        slug: "tasarim-el-cantasi",
-        description: "Gerçek deri, premium kalite",
-        price: 1450,
-        oldPrice: null,
-        imageUrl: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
-        categoryId: 2,
-        stock: 20,
-        isNew: true,
-        isOnSale: false,
-        isLimited: false
-      },
-      {
         name: "Ultra X Akıllı Telefon",
         slug: "ultra-x-akilli-telefon",
         description: "256GB, Gece Mavisi",
@@ -352,6 +425,34 @@ export class MemStorage implements IStorage {
         isOnSale: false,
         isLimited: false
       },
+      {
+        name: "Akıllı Saat Pro",
+        slug: "akilli-saat-pro",
+        description: "Fitness takibi, kalp ritmi sensörü",
+        price: 2499,
+        oldPrice: 2999,
+        imageUrl: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 3,
+        stock: 12,
+        isNew: true,
+        isOnSale: true,
+        isLimited: false
+      },
+      {
+        name: "Bluetooth Hoparlör",
+        slug: "bluetooth-hoparlor",
+        description: "Su geçirmez, 12 saat pil ömrü",
+        price: 899,
+        oldPrice: 1199,
+        imageUrl: "https://images.unsplash.com/photo-1589003077984-894e133dabab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 3,
+        stock: 20,
+        isNew: false,
+        isOnSale: true,
+        isLimited: false
+      },
+      
+      // Ev & Yaşam Category (ID: 4)
       {
         name: "Modern Sandalye",
         slug: "modern-sandalye",
@@ -366,16 +467,42 @@ export class MemStorage implements IStorage {
         isLimited: false
       },
       {
-        name: "Erkek Klasik Kol Saati",
-        slug: "erkek-klasik-kol-saati",
-        description: "Su geçirmez, safir cam",
-        price: 1850,
+        name: "Minimalist Masa Lambası",
+        slug: "minimalist-masa-lambasi",
+        description: "Dokunmatik kontrol, LED aydınlatma",
+        price: 299,
+        oldPrice: 399,
+        imageUrl: "https://images.unsplash.com/photo-1534028752968-b47f11a2e4fb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 4,
+        stock: 35,
+        isNew: false,
+        isOnSale: true,
+        isLimited: false
+      },
+      {
+        name: "Dekoratif Yastık Seti",
+        slug: "dekoratif-yastik-seti",
+        description: "4 parça, farklı desenler",
+        price: 249,
         oldPrice: null,
-        imageUrl: "https://images.unsplash.com/photo-1524805444758-089113d48a6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
-        categoryId: 1,
-        stock: 18,
+        imageUrl: "https://images.unsplash.com/photo-1540638349517-3abd5afc5847?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 4,
+        stock: 40,
         isNew: true,
         isOnSale: false,
+        isLimited: false
+      },
+      {
+        name: "Ahşap Kahve Sehpası",
+        slug: "ahsap-kahve-sehpasi",
+        description: "Doğal meşe ağacı, dayanıklı",
+        price: 1499,
+        oldPrice: 1699,
+        imageUrl: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=600",
+        categoryId: 4,
+        stock: 15,
+        isNew: false,
+        isOnSale: true,
         isLimited: false
       }
     ];
