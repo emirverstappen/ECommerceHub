@@ -1,21 +1,9 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { CartItemWithProduct } from "@shared/schema";
+import { createContext, useContext, useState, useEffect } from "react";
 import { apiRequest } from "./queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "./auth";
 
-interface CartContextType {
-  cartItems: CartItemWithProduct[];
-  isLoading: boolean;
-  totalItems: number;
-  totalPrice: number;
-  addToCart: (productId: number, quantity: number) => Promise<void>;
-  updateQuantity: (itemId: number, quantity: number) => Promise<void>;
-  removeItem: (itemId: number) => Promise<void>;
-  clearCart: () => Promise<void>;
-}
-
-const CartContext = createContext<CartContextType>({
+const CartContext = createContext({
   cartItems: [],
   isLoading: false,
   totalItems: 0,
@@ -26,8 +14,8 @@ const CartContext = createContext<CartContextType>({
   clearCart: async () => {}
 });
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
+export function CartProvider({ children }) {
+  const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
@@ -70,7 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addToCart = async (productId: number, quantity: number) => {
+  const addToCart = async (productId, quantity) => {
     if (!isAuthenticated) {
       toast({
         title: "Login Required",
@@ -88,7 +76,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       });
       
       await fetchCart(); // Refresh the cart
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Error",
         description: error.message || "Couldn't add product to cart.",
@@ -99,12 +87,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const updateQuantity = async (itemId: number, quantity: number) => {
+  const updateQuantity = async (itemId, quantity) => {
     try {
       setIsLoading(true);
       await apiRequest("PUT", `/api/cart/${itemId}`, { quantity });
       await fetchCart(); // Refresh the cart
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Error",
         description: error.message || "Couldn't update cart.",
@@ -115,12 +103,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const removeItem = async (itemId: number) => {
+  const removeItem = async (itemId) => {
     try {
       setIsLoading(true);
       await apiRequest("DELETE", `/api/cart/${itemId}`);
       await fetchCart(); // Refresh the cart
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Error",
         description: error.message || "Couldn't remove item from cart.",
@@ -136,7 +124,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       await apiRequest("DELETE", "/api/cart");
       setCartItems([]);
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Error",
         description: error.message || "Couldn't clear cart.",
@@ -148,7 +136,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, isLoading, totalItems, totalPrice, addToCart, updateQuantity, removeItem, clearCart }}>
+    <CartContext.Provider value={{
+      cartItems,
+      isLoading,
+      totalItems,
+      totalPrice,
+      addToCart,
+      updateQuantity,
+      removeItem,
+      clearCart
+    }}>
       {children}
     </CartContext.Provider>
   );

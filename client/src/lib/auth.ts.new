@@ -117,11 +117,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, isLoading, isAuthenticated: !!user, login, logout, register }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    isLoading,
+    isAuthenticated: !!user,
+    login,
+    logout,
+    register
+  };
+
+  // Use React.createElement to avoid JSX parsing issues
+  return AuthContext.Provider({value, children});
 }
 
 export function useAuth() {
